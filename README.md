@@ -28,30 +28,56 @@ Tomando el dominio del Problema 1.5 de la guía de estudios correspondiente a la
 
 ## API Reference
 
-#### Get all items
+#### Get all Articulos
 
 ```http
-  GET /api/items
+  GET /api/Articulos
 ```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
-
-#### Get item
+#### Post Articulo
 
 ```http
-  GET /api/items/${id}
+  Post /api/Articulos
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
+| `id`      | `int` | El valor de id debe ser 0 (cero) para crear/insertar un nuevo articulo |
+| `nombre`      | `string` | nombre del articulo |
+| `precioUnitario`      | `double` |precio|
 
-#### add(num1, num2)
 
-Takes two numbers and returns the sum.
+#### Get Articulo especifico
 
+```http
+  GET /api/Articulos/${id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `int` | **Requerido**. codigo del Articulo a consultar |
+
+#### Put Articulo
+
+```http
+  PUT /api/Articulos/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| From URL|
+| `id`      | `int` | **Requerido**. codigo del Articulo a que se desea modificar |
+| From Body|
+| `id`      | `int` | valor indistinto |
+| `nombre`      | `string` | nombre que se desea aplicar al objeto existente |
+| `precioUnitario`      | `double` |precio que se desea aplicar al objeto existente|
+
+#### Delete Articulo
+
+```http
+  DELETE /api/Articulos/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `int` | **Requerido**. codigo del Articulo que se desea eliminar |
 
 ## Estadísticas
 
