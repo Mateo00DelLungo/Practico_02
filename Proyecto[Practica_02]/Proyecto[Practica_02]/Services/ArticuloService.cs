@@ -12,33 +12,34 @@ namespace Proyecto_Practica_02_.Services
         {
             repositorio = new ArticuloRepositorio();
         }
-        public bool SaveArticulo(ArticuloDTO oArticulodto)
+
+        public bool SaveArticulo(ArticuloDTO dto)
         {
-            int id = oArticulodto.Id;
-            string nom = oArticulodto.Nombre;
-            double prec = oArticulodto.PrecioUnitario;
-            Articulo articulo = new Articulo(id, nom, prec);
+            Articulo articulo = Mapper.Set(dto);
             return repositorio.Save(articulo);
         }
 
         public bool DeleteArticulo(int id)
         {
-            throw new NotImplementedException();
+            return repositorio.Delete(id);
         }
-
         public List<ArticuloDTO> GetAllArticulo()
         {
-            throw new NotImplementedException();
+            var lstarticulos = repositorio.GetAll();
+            return Mapper.GetList(lstarticulos);
         }
 
         public ArticuloDTO GetByIdArticulo(int id)
         {
-            throw new NotImplementedException();
+            Articulo articulo = repositorio.GetById(id);
+            return Mapper.Get(articulo);
         }
 
-        public int UpdateArticulo(ArticuloDTO oArticulo)
+        public bool UpdateArticulo(int id, ArticuloDTO dto)
         {
-            throw new NotImplementedException();
+            var articulo = Mapper.Set(dto);
+            articulo.Id = id;
+            return repositorio.Save(articulo);
         }
     }
 }

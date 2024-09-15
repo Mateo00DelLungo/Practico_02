@@ -22,7 +22,12 @@ namespace Proyecto_Practica_02_.Controllers
         {
             try
             {
-                return Ok(app.GetAllArticulo());
+                var value = app.GetAllArticulo();
+                if(value == null) 
+                {
+                    return StatusCode(500, "No existen registros en la base de datos");
+                }
+                return Ok(value);
             }
             catch (Exception ex)
             {
@@ -34,10 +39,13 @@ namespace Proyecto_Practica_02_.Controllers
         public IActionResult Get(int id)
         {   
             if(id <= 0)
-                return BadRequest("Id no valido");
+                return BadRequest("Código no valido");
             try
             {
-                return Ok(app.GetByIdArticulo(id));
+                var value = app.GetByIdArticulo(id);
+                if (value == null) 
+                    return NotFound($"No existe ningun articulo con el id: [{id}]");
+                return Ok(value.ToString());
             }
             catch (Exception ex)
             {
@@ -51,13 +59,13 @@ namespace Proyecto_Practica_02_.Controllers
         {
             if (!ArticuloDTO.Validar(value) || value.Id != 0)
             {
-                return BadRequest("Articulo no valido, chequee los datos");
+                return BadRequest("Articulo no valido, chequee los datos, para crear un articulo el id debe ser 0");
             }
             try
             {
                 if (app.SaveArticulo(value))
                 {
-                    return Ok("Articulo: " + value.ToString() + " guardado con exito");
+                    return Ok($"Articulo: [{value.Nombre} - ${value.PrecioUnitario}] guardado con exito");
                 }
                 else return StatusCode(500, "Error al insertar en la base de datos");
             }
@@ -68,21 +76,27 @@ namespace Proyecto_Practica_02_.Controllers
         }
 
         // PUT api/<ArticulosController>/5
-        ////////
-        ///TO DO
+        
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] ArticuloDTO value)
         {
+            if(id <= 0) { return BadRequest("Id no válido"); }
             try
             {
-                return Ok(app.UpdateArticulo(value));
+                if(app.UpdateArticulo(id, value))
+                {
+                    return Ok($"Articulo: [{id}] actualizado con exito");
+                }
+                else
+                {
+                    return NotFound($"No existe o no se ha encontrado un articulo con el id: [{id}]");
+                }
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error Interno: {ex}");
             }
         }
-
         // DELETE api/<ArticulosController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -91,7 +105,14 @@ namespace Proyecto_Practica_02_.Controllers
                 return BadRequest("Id no valido"); 
             try
             {
-                return Ok(app.DeleteArticulo(id));
+                if (app.DeleteArticulo(id))
+                {
+                    return Ok($"Se ha borrado el articulo: [{id}] con exito");
+                }
+                else
+                {
+                    return StatusCode(500,"Error en la base de datos, no existe el articulo o se borraron varios registros");
+                }
             }
             catch (Exception ex)
             {

@@ -9,10 +9,9 @@ namespace DataDLL.Interfaces
 {
     public interface IArticuloRepository
     {
-        List<Object> Get();
-        Object Get(int id);
+        List<Articulo> GetAll();
+        Articulo GetById(int id);
         bool Save(Articulo oArticulo);
         bool Delete(int id);
-        bool Update(Articulo oArticulo);
     }
 }

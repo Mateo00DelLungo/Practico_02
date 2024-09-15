@@ -8,6 +8,6 @@ namespace Proyecto_Practica_02_.Services
         ArticuloDTO GetByIdArticulo(int id);
         bool SaveArticulo(ArticuloDTO oArticulo);
         bool DeleteArticulo(int id);
-        int UpdateArticulo(ArticuloDTO oArticulo);
+        bool UpdateArticulo(int id, ArticuloDTO oArticulo);
     }
 }

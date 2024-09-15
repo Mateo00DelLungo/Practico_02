@@ -11,6 +11,7 @@ namespace DataDLL.Domain
         public int Id { get; set; }
         public string Nombre { get; set; }
         public double PrecioUnitario { get; set; }
+        public Articulo(){}
         public Articulo(int id, string nombre, double precioUnitario)
         {
             Id = id;

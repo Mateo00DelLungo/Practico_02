@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -27,14 +28,21 @@ namespace DataDLL.Data
         {
             return _cnn;
         }
+        private void CloseConnection()
+        {
+            if (_cnn != null && _cnn.State == ConnectionState.Open) 
+            {
+                _cnn.Close();
+            }
+        }
         public int ExecuteSPNonQuery(string sp, List<Parametro>? parametros)
         {
             int rows = 0;
-            _cnn.Open();
-            var cmd = new SqlCommand(sp, _cnn);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
             try
             {
+                _cnn.Open();
+                var cmd = new SqlCommand(sp, _cnn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 if (parametros != null)
                 {
                     cmd = Parametro.LoadToCMD(parametros,cmd);
@@ -47,12 +55,33 @@ namespace DataDLL.Data
             }
             finally
             {
-                if(_cnn != null && _cnn.State == System.Data.ConnectionState.Open)
-                {
-                    _cnn.Close();
-                }
+                CloseConnection();
             }
             return rows;
+        }
+        public DataTable ExecuteSPQuery(string sp, List<Parametro>? parametros)
+        {
+            var dt = new DataTable();
+            try
+            {
+                _cnn.Open();
+                var cmd = new SqlCommand(sp, _cnn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                if (parametros != null)
+                {
+                    cmd = Parametro.LoadToCMD(parametros, cmd);
+                }
+                dt.Load(cmd.ExecuteReader());
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return dt;
         }
     }
 }
